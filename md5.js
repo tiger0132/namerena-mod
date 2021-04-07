@@ -6840,6 +6840,8 @@ window.setTimeout = function () {
 							
 							var lines = m.split('\n'), newLines = [];
 							var format, team, start = 0;
+							var ratio = 10, instantQuit;
+							
 							for (var line of lines) {
 								var m;
 								if (m = line.match(/\+fd (.*)@(.+)/)) { // 测试第一次失败（固定格式）
@@ -6847,6 +6849,9 @@ window.setTimeout = function () {
 									if (!format.includes('???')) format += '???';
 								} else if (m = line.match(/\+fd.start (-?\d+)/)) { // 测试第一次失败（固定起点）
 									start = +m[1];
+								} else if (m = line.match(/\+test.ratio (\d+)/)) { // 固定百分比
+									ratio = +m[1];
+									instantQuit = true;
 								} else {
 									newLines.push(line);
 								}
@@ -6866,8 +6871,9 @@ window.setTimeout = function () {
 										i = team
 										h = V.oa(J.B(l, 1), i)
 										h.fd = true // 标记
+										h.instantQuit = instantQuit // 是否固定百分比
 										h.format = format // 格式
-										h.d = 1000
+										h.d = ratio * 100 // 停止百分比
 										h.e = start // 起点
 										g = Z.fx(h)
 										g.r = 2000
@@ -6877,7 +6883,8 @@ window.setTimeout = function () {
 										i = $.lf()
 										if (J.B(l, 0).length === 2 && J.Q(J.B(J.B(l, 0)[1], 0), $.bv())) i = $.bv()
 										h = V.oa(J.B(l, 1), i)
-										h.d = 1000
+										h.instantQuit = instantQuit // 是否固定百分比
+										h.d = ratio * 100 // 停止百分比
 										g = Z.fx(h)
 										g.r = 2000
 										u = 1
@@ -11075,8 +11082,13 @@ window.setTimeout = function () {
 								u = 4
 								break
 							}
+							if (r.d === -1)
+								throw 'abort';
 							function newName() {
-								return r.format.replace('???', r.e++);
+								if (r.format)
+									return r.format.replace('???', r.e++);
+								else
+									return '' + r.e++;
 							}
 							if (p.length === 1 && !r.c) // 强评、普评
 								k = H.a([
@@ -11169,7 +11181,10 @@ window.setTimeout = function () {
 				u.a = t.f[0].e
 				t.z.ap(0, new V.eV(t, u))
 			}
-			t.d *= 10
+			if (t.instantQuit)
+				t.d = -1;
+			else
+				t.d *= 10
 		},
 		ad: function (a, b) {
 			return this.dC(a, b)

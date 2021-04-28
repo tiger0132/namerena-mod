@@ -1,7 +1,7 @@
-var old = window.setTimeout;
-window.setTimeout = function () {
-	arguments[1] = 0;
-	old.apply(this, arguments);
+function escapeHtml(str) {
+	var div = document.createElement("div");
+	div.appendChild(document.createTextNode(str));
+	return div.innerHTML;
 }
 
 { } (function dartProgram() {
@@ -6837,7 +6837,7 @@ window.setTimeout = function () {
 							o = window.sessionStorage.getItem(O.d_("k"))
 							n = F.ks(o)
 							m = C.f.bn(0, n)
-							
+
 							var lines = m.split('\n'), newLines = [];
 							var format, team, start = 0;
 							var ratio = 10, instantQuit;
@@ -11082,8 +11082,6 @@ window.setTimeout = function () {
 								u = 4
 								break
 							}
-							if (r.d === -1)
-								throw 'abort';
 							function newName() {
 								if (r.format)
 									return r.format.replace('???', r.e++);
@@ -11139,11 +11137,6 @@ window.setTimeout = function () {
 						case 8:
 							if (C.a.w(a1, H.o(g.a[0], "$ibT").e.gaY())) ++r.Q;
 							else if (r.fd) { // 输掉了，且第一次失败后退出
-								function escapeHtml(str) {
-									var div = document.createElement("div");
-									div.appendChild(document.createTextNode(str));
-									return div.innerHTML;
-								}
 								const str = k.map(p => p.map(([x, y, z]) => escapeHtml(x) + (y ? '@' + escapeHtml(y) : '') + (z ? '+' + escapeHtml(z) : '')).join('<br>')).join('<br><br>');
 								document.querySelector('.pbody.hbody').appendChild(Z.pG({
 									a: 0, b: 0, c: 0, e: null, f: null, r: null, x: 0,
@@ -11929,8 +11922,8 @@ window.setTimeout = function () {
 				s.appendChild(n)
 				k.r.appendChild(document.createTextNode(" "))
 			}
-			k.fr = i + k.cy + '">' + k.x.outerHTML + h + H.d(k.dx) + " </div></div>"
-			k.fx = i + k.cy + '">' + k.x.outerHTML + h + H.d(k.dx) + ' </div><div class="maxhp" style="width: ' + p + '" /></div>'
+			k.fr = i + k.cy + '">' + k.x.outerHTML + h + escapeHtml(H.d(k.dx)) + " </div></div>"
+			k.fx = i + k.cy + '">' + k.x.outerHTML + h + escapeHtml(H.d(k.dx)) + ' </div><div class="maxhp" style="width: ' + p + '" /></div>'
 			if (c) {
 				m = Z.a0("detail")
 				s = k.r
@@ -11999,6 +11992,7 @@ window.setTimeout = function () {
 	Z.hl.prototype = {}
 	Z.k3.prototype = {
 		$1: function (a) {
+			// mark render
 			var u, t, s = J.F(a)
 			if (!!s.$ib_) return $.ac.h(0, a.a).fr
 			if (!!s.$ibG) {
